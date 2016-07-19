@@ -13,7 +13,6 @@ var PhoneMask = function(elements, settings) {
         e = e || window.event;
         var elem = e.target || e.srcElement;
         var result = true;
-        // debugger;
         if (!that.isIgnoredKey(e.keyCode)) {
             if (e.keyCode != that.backspaceCode) {
                 var char = String.fromCharCode(e.keyCode);
@@ -128,9 +127,3 @@ PhoneMask.prototype.replaceToPatternChar = function(elem) {
     }
     return value;
 };
-
-var el;
-document.addEventListener("DOMContentLoaded", function(){
-    el = new PhoneMask(document.querySelectorAll('#modalPhoneInput'));
-    console.log(el);
-});
