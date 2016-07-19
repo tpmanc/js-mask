@@ -1,57 +1,76 @@
-var PhoneMask = function(elements, pattern, prefix, placeholder) {
-	var that = this;
-	this.patternChar = "x";
-	this.elements = elements;
-	this.pattern = pattern;
-	this.prefix = prefix;
-	this.placeholder = placeholder;
-    this.backspaceCode = 8;
-	// this.igrogingKeys = [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
+var PhoneMask = function(elements, settings) {
+    var that = this;
+    settings = settings || {};
+    this.elements = elements;
+    this.patternChar = settings.patternChar || '_';
+    this.pattern = settings.pattern || '+7 (___) ___-__-__';
+    this.prefix = settings.prefix || '+7 ';
+    this.backspaceCode = settings.backspaceCode || 8;
+    this.allowedKeysRegExp = settings.allowedKeysRegExp || /^\d$/;
+    this.igrogingKeys = settings.igrogingKeys || [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
 
-	var inputKeyEvent = function(e) {
-		e = e || window.event;
-		var source = e.target || e.srcElement;
-        if (e.keyCode != that.backspaceCode) {
-        	source.value = that.phoneMasker(source, e.keyCode);
-        } else {
-            console.log('back');
-        }
-
-        // select next pattern symbol
+    var inputKeyEvent = function(e) {
+        e = e || window.event;
+        var elem = e.target || e.srcElement;
+        var result = true;
         // debugger;
-        var start = source.value.indexOf(that.patternChar);
-        if (start > -1) {
-            var end = start + 1;
-            that.selectCharInInput(source, start, end);
+        if (!that.isIgnoredKey(e.keyCode)) {
+            if (e.keyCode != that.backspaceCode) {
+                var char = String.fromCharCode(e.keyCode);
+                if (char.match(that.allowedKeysRegExp) != null) {
+                    elem.value = that.replaceToChar(elem, char);
+                }
+            } else {
+                elem.value = that.replaceToPatternChar(elem);
+            }
+            
+            result = false;
         }
-        return false;
-	};
+        // select first pattern symbol
+        that.selectFirstPatterntChar(elem);
+        if (result == false) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            return result;
+        }
+        console.log(result);
+    };
 
     var inputFocusEvent = function(e) {
         e = e || window.event;
         var elem = e.target || e.srcElement;
         
         var start = elem.value.indexOf(that.patternChar);
-        if (start < 0) {
-            start = 0;
-        }
         var end = start + 1;
+        if (start < 0) {
+            start = elem.value.length - 1;
+            end = start + 1;
+        }
         that.selectCharInInput(elem, start, end);
     }
 
-	this.elements.forEach(function(item, i, arr){
+    this.elements.forEach(function(item, i, arr){
         item.value =  that.pattern;
         item.onkeydown = inputKeyEvent;
-		item.onfocus = inputFocusEvent;
-	});
+        item.onfocus = inputFocusEvent;
+    });
 }
 
-// PhoneMask.prototype.isIgnoredKey = function(code) {
-// 	if (this.elements.indexOf(code) < 0) {
-// 		return false;
-// 	}
-// 	return true;
-// };
+PhoneMask.prototype.selectFirstPatterntChar = function(elem) {
+    var start = elem.value.indexOf(this.patternChar);
+    if (start > -1) {
+        var end = start + 1;
+        this.selectCharInInput(elem, start, end);
+    }
+}
+
+PhoneMask.prototype.isIgnoredKey = function(code) {
+    if (this.igrogingKeys.indexOf(code) < 0) {
+        return false;
+    }
+    return true;
+};
 
 PhoneMask.prototype.selectCharInInput = function(elem, start, end)  {
     if (elem.setSelectionRange) {
@@ -68,67 +87,50 @@ PhoneMask.prototype.selectCharInInput = function(elem, start, end)  {
     }
 };
 
-PhoneMask.prototype.replaceAt = function(str , index , character)  {
+PhoneMask.prototype.replaceAt = function(str, index, character)  {
     var tempArr = str.split("");
     tempArr[index] = character;
     return tempArr.join("");
 };
 
-PhoneMask.prototype.phoneMasker = function(elem, keyCode) {
+PhoneMask.prototype.replaceToChar = function(elem, char) {
     var value = elem.value;
-    var char = String.fromCharCode(keyCode);
     var firstCharToReplace = value.indexOf(this.patternChar);
     if (firstCharToReplace > -1) {
         return this.replaceAt(value, firstCharToReplace, char);
     }
     return value;
-    // return 
-    // var patternChars = this.pattern.replace(/\W/g, '');
-    // var output = this.pattern.split("");
-    // var values = value.toString().replace(this.prefix, '').replace(/\W/g, "");
-    // var charsValues = values.replace(/\W/g, '');
-    // var index = 0;
-    // var i;
-    // var outputLength = output.length;
-
-    // debugger;
-    // for (i = 3; i < outputLength; i++) {
-    // 	// Reached the end of input
-    // 	if (index >= values.length) {
-    // 		if (patternChars.length == charsValues.length) {
-    // 		  return output.join("");
-    // 		} else {
-    // 		  break;
-    // 		}
-    // 	}
-    // 	// Remaining chars in input
-    // 	else{
-    // 		if (output[i] === this.patternChar && values[index].match(/[0-9]/)) {
-    // 			output[i] = values[index++];
-    // 		} else if (output[i] === this.patternChar) {
-    // 			return output.slice(0, i).join("");
-    // 		}
-    // 	}
-    // }
-    // var res = output.join("").substr(0, i);
-    // res = this.setPlaceholders(res);
-    // debugger;
-
-    // return res;
 };
 
-PhoneMask.prototype.setPlaceholders = function(value) {
-	// debugger;
-	for (var i = 0; i < value.length; i++) {
-    	if (value[i] == this.patternChar) {
-    		value[i] = placeholder;
-    	}
+PhoneMask.prototype.replaceToPatternChar = function(elem) {
+    var value = elem.value;
+    var firstPatternCharPos = value.indexOf(this.patternChar);
+    var replaceCharPos;
+    var isFindPos = false;
+    if (firstPatternCharPos == -1) {
+        replaceCharPos = value.length - 1;
+        isFindPos = true;
+    } else {
+        replaceCharPos = firstPatternCharPos - 1;
+        while (!isFindPos) {
+            if (this.pattern[replaceCharPos] != value[replaceCharPos]) {
+                isFindPos = true;
+            } else {
+                replaceCharPos--;
+                if (replaceCharPos < 0) {
+                    break;
+                }
+            }
+        }
+    }
+    if (isFindPos && replaceCharPos > this.prefix.length) {
+        return this.replaceAt(value, replaceCharPos, this.patternChar);
     }
     return value;
 };
 
 var el;
 document.addEventListener("DOMContentLoaded", function(){
-	el = new PhoneMask(document.querySelectorAll('#modalPhoneInput'), "+1 (xxx) xxx-xx-xx", "+1 ", '_');
-	console.log(el);
+    el = new PhoneMask(document.querySelectorAll('#modalPhoneInput'));
+    console.log(el);
 });
