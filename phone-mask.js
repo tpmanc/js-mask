@@ -33,7 +33,6 @@ var PhoneMask = function(elements, settings) {
             }
             return result;
         }
-        console.log(result);
     };
 
     var inputFocusEvent = function(e) {
