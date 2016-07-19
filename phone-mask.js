@@ -3,11 +3,12 @@ var PhoneMask = function(elements, settings) {
     settings = settings || {};
     this.elements = elements;
     this.patternChar = settings.patternChar || '_';
-    this.pattern = settings.pattern || '+7 (___) ___-__-__';
-    this.prefix = settings.prefix || '+7 ';
+    this.prefix = settings.prefix || '';
+    this.pattern = settings.pattern || '(___) ___-__-__';
+    this.pattern = this.prefix + this.pattern;
     this.backspaceCode = settings.backspaceCode || 8;
-    this.allowedKeysRegExp = settings.allowedKeysRegExp || /^\d$/;
-    this.igrogingKeys = settings.igrogingKeys || [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
+    this.allowedRegExp = settings.allowedRegExp || /^\d$/;
+    this.igrogeKeyCodes = settings.igrogeKeyCodes || [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
 
     var inputKeyEvent = function(e) {
         e = e || window.event;
@@ -16,7 +17,7 @@ var PhoneMask = function(elements, settings) {
         if (!that.isIgnoredKey(e.keyCode)) {
             if (e.keyCode != that.backspaceCode) {
                 var char = String.fromCharCode(e.keyCode);
-                if (char.match(that.allowedKeysRegExp) != null) {
+                if (that.allowedRegExp == false || char.match(that.allowedRegExp) != null) {
                     elem.value = that.replaceToChar(elem, char);
                 }
             } else {
@@ -64,7 +65,7 @@ PhoneMask.prototype.selectFirstPatterntChar = function(elem) {
 }
 
 PhoneMask.prototype.isIgnoredKey = function(code) {
-    if (this.igrogingKeys.indexOf(code) < 0) {
+    if (this.igrogeKeyCodes.indexOf(code) < 0) {
         return false;
     }
     return true;
