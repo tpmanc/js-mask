@@ -126,3 +126,10 @@ PhoneMask.prototype.replaceToPatternChar = function(elem) {
     }
     return value;
 };
+
+PhoneMask.prototype.destroy = function() {
+    this.elements.forEach(function(item, i, arr){
+        item.onkeydown = null;
+        item.onfocus = null;
+    });
+};
