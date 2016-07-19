@@ -48,11 +48,11 @@ var PhoneMask = function(elements, settings) {
         that.selectCharInInput(elem, start, end);
     }
 
-    this.elements.forEach(function(item, i, arr){
-        item.value =  that.pattern;
-        item.onkeydown = inputKeyEvent;
-        item.onfocus = inputFocusEvent;
-    });
+    for (var i = 0; i < this.elements.length; i++) {
+        this.elements[i].value =  that.pattern;
+        this.elements[i].onkeydown = inputKeyEvent;
+        this.elements[i].onfocus = inputFocusEvent;
+    }
 }
 
 PhoneMask.prototype.selectFirstPatterntChar = function(elem) {
@@ -128,8 +128,8 @@ PhoneMask.prototype.replaceToPatternChar = function(elem) {
 };
 
 PhoneMask.prototype.destroy = function() {
-    this.elements.forEach(function(item, i, arr){
-        item.onkeydown = null;
-        item.onfocus = null;
-    });
+    for (var i = 0; i < this.elements.length; i++) {
+        this.elements[i].onkeydown = null;
+        this.elements[i].onfocus = null;
+    }
 };
