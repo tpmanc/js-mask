@@ -7,10 +7,10 @@ var PhoneMask = function(elements, settings) {
     this.pattern = settings.pattern || '(___) ___-__-__';
     this.pattern = this.prefix + this.pattern;
     this.backspaceCode = settings.backspaceCode || 8;
-    this.allowedRegExp = settings.allowedRegExp || /^\d$/;
+    this.allowedRegExp = settings.allowedRegExp || /^\w$/;
     this.igrogeKeyCodes = settings.igrogeKeyCodes || [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
 
-    var inputKeyEvent = function(e) {
+    var inputKeyEventPress = function(e) {
         e = e || window.event;
         var elem = e.target || e.srcElement;
         var result = true;
@@ -20,8 +20,6 @@ var PhoneMask = function(elements, settings) {
                 if (that.allowedRegExp == false || char.match(that.allowedRegExp) != null) {
                     elem.value = that.replaceToChar(elem, char);
                 }
-            } else {
-                elem.value = that.replaceToPatternChar(elem);
             }
             
             result = false;
@@ -33,6 +31,23 @@ var PhoneMask = function(elements, settings) {
                 e.preventDefault();
             }
             return result;
+        }
+    };
+
+    var inputKeyEventDown = function(e) {
+        e = e || window.event;
+        var elem = e.target || e.srcElement;
+        var result = true;
+        if (!that.isIgnoredKey(e.keyCode)) {
+            if (e.keyCode == that.backspaceCode) {
+                elem.value = that.replaceToPatternChar(elem);
+                result = false;
+            }
+        }
+        // select first pattern symbol
+        that.selectFirstPatterntChar(elem);
+        if (result === false) {
+            return false;
         }
     };
 
@@ -52,12 +67,14 @@ var PhoneMask = function(elements, settings) {
     if (Object.prototype.toString.call(this.elements) === "[object NodeList]") {
         for (var i = 0; i < this.elements.length; i++) {
             this.elements[i].value =  that.pattern;
-            this.elements[i].onkeydown = inputKeyEvent;
+            this.elements[i].onkeydown = inputKeyEventDown;
+            this.elements[i].onkeypress = inputKeyEventPress;
             this.elements[i].onfocus = inputFocusEvent;
         }
     } else if (this.elements != null) {
         this.elements.value =  that.pattern;
-        this.elements.onkeydown = inputKeyEvent;
+        this.elements.onkeydown = inputKeyEventDown;
+        this.elements.onkeypress = inputKeyEventPress;
         this.elements.onfocus = inputFocusEvent;
     }
 }
@@ -135,8 +152,17 @@ PhoneMask.prototype.replaceToPatternChar = function(elem) {
 };
 
 PhoneMask.prototype.destroy = function() {
-    for (var i = 0; i < this.elements.length; i++) {
-        this.elements[i].onkeydown = null;
-        this.elements[i].onfocus = null;
+    if (Object.prototype.toString.call(this.elements) === "[object NodeList]") {
+        for (var i = 0; i < this.elements.length; i++) {
+            this.elements[i].value =  null;
+            this.elements[i].onkeydown = null;
+            this.elements[i].onkeypress = null;
+            this.elements[i].onfocus = null;
+        }
+    } else if (this.elements != null) {
+        this.elements.value =  null;
+        this.elements.onkeydown = null;
+        this.elements.onkeypress = null;
+        this.elements.onfocus = null;
     }
 };
