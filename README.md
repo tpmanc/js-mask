@@ -4,7 +4,7 @@ Written in vanilla JS library to add phone mask to your input elements.
 
 ## Demo
 
-[Phone mask demo](/)
+[Phone mask demo](http://js-mask.chukancev.ru/)
 
 ## Requirements
 
@@ -16,9 +16,9 @@ Library is written in vanilla JS and has no dependancies.
 
 ### Download
 
-* [development version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/phone-mask.min.js)
+* [development version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/phone-mask.js)
 
-* [minified version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/phone-mask.js)
+* [minified version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/phone-mask.min.js)
 
 ## How to use
 
