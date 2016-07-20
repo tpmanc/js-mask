@@ -16,9 +16,9 @@ Library is written in vanilla JS and has no dependancies.
 
 ### Download
 
-* [development version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/phone-mask.js)
+* [development version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/js-mask.js)
 
-* [minified version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/phone-mask.min.js)
+* [minified version](https://raw.githubusercontent.com/tpmanc/js-mask/1.0.0/js-mask.min.js)
 
 ## How to use
 
