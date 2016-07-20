@@ -1,4 +1,4 @@
-# Vanilla js phone mask
+# Js mask
 
 Written in vanilla JS library to add phone mask to your input elements.
 
