@@ -49,10 +49,16 @@ var PhoneMask = function(elements, settings) {
         that.selectCharInInput(elem, start, end);
     }
 
-    for (var i = 0; i < this.elements.length; i++) {
-        this.elements[i].value =  that.pattern;
-        this.elements[i].onkeydown = inputKeyEvent;
-        this.elements[i].onfocus = inputFocusEvent;
+    if (Object.prototype.toString.call(this.elements) === "[object NodeList]") {
+        for (var i = 0; i < this.elements.length; i++) {
+            this.elements[i].value =  that.pattern;
+            this.elements[i].onkeydown = inputKeyEvent;
+            this.elements[i].onfocus = inputFocusEvent;
+        }
+    } else if (this.elements != null) {
+        this.elements.value =  that.pattern;
+        this.elements.onkeydown = inputKeyEvent;
+        this.elements.onfocus = inputFocusEvent;
     }
 }
 
@@ -122,7 +128,7 @@ PhoneMask.prototype.replaceToPatternChar = function(elem) {
             }
         }
     }
-    if (isFindPos && replaceCharPos > this.prefix.length) {
+    if (isFindPos && replaceCharPos >= this.prefix.length) {
         return this.replaceAt(value, replaceCharPos, this.patternChar);
     }
     return value;
