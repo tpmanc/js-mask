@@ -1,0 +1,26 @@
+{
+  "name": "js-mask",
+  "main": "js-mask.min.js",
+  "homepage": "https://github.com/tpmanc/js-mask",
+  "authors": [
+    "tpmanc <tpxtrime@mail.ru>"
+  ],
+  "description": "Javascript mask input",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "vanilla",
+    "input",
+    "mask",
+    "masker"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
