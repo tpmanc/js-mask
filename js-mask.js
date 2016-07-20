@@ -7,7 +7,7 @@ var PhoneMask = function(elements, settings) {
     this.pattern = settings.pattern || '(___) ___-__-__';
     this.pattern = this.prefix + this.pattern;
     this.backspaceCode = settings.backspaceCode || 8;
-    this.allowedRegExp = settings.allowedRegExp || /^\w$/;
+    this.allowedRegExp = settings.allowedRegExp || /^\d$/;
     this.igrogeKeyCodes = settings.igrogeKeyCodes || [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
 
     var inputKeyEventPress = function(e) {
