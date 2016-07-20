@@ -20,6 +20,10 @@ Library is written in vanilla JS and has no dependancies.
 
 * [minified version](https://raw.githubusercontent.com/tpmanc/js-mask/master/js-mask.min.js)
 
+### Bower
+
+Install via bower: `bower install --save js-mask`
+
 ## How to use
 
 ```html
