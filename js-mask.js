@@ -7,6 +7,7 @@ var PhoneMask = function(elements, settings) {
     this.pattern = settings.pattern || '(___) ___-__-__';
     this.pattern = this.prefix + this.pattern;
     this.backspaceCode = settings.backspaceCode || 8;
+    this.deleteCode = settings.deleteCode || 46;
     this.allowedRegExp = settings.allowedRegExp || /^\d$/;
     this.igrogeKeyCodes = settings.igrogeKeyCodes || [9, 16, 17, 18, 36, 37, 38, 39, 40, 91, 92, 93];
 
@@ -14,8 +15,9 @@ var PhoneMask = function(elements, settings) {
         e = e || window.event;
         var elem = e.target || e.srcElement;
         var result = true;
+        console.log(e.keyCode);
         if (!that.isIgnoredKey(e.keyCode)) {
-            if (e.keyCode != that.backspaceCode) {
+            if (e.keyCode != that.backspaceCode && e.keyCode != that.deleteCode) {
                 var char = String.fromCharCode(e.keyCode);
                 if (that.allowedRegExp == false || char.match(that.allowedRegExp) != null) {
                     elem.value = that.replaceToChar(elem, char);
@@ -40,6 +42,10 @@ var PhoneMask = function(elements, settings) {
         var result = true;
         if (!that.isIgnoredKey(e.keyCode)) {
             if (e.keyCode == that.backspaceCode) {
+                elem.value = that.replaceToPatternChar(elem);
+                result = false;
+            }
+            if (e.keyCode == that.deleteCode) {
                 elem.value = that.replaceToPatternChar(elem);
                 result = false;
             }

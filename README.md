@@ -32,7 +32,7 @@ Install via bower: `bower install --save js-mask`
    <body>
       <input type="text" id="phone">
       <!-- Loading the library -->
-      <script src="phone-mask.min.js"></script>
+      <script src="js-mask.min.js"></script>
    </body>
 </html>
 ```
