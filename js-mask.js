@@ -72,17 +72,35 @@ var PhoneMask = function(elements, settings) {
 
     if (Object.prototype.toString.call(this.elements) === "[object NodeList]") {
         for (var i = 0; i < this.elements.length; i++) {
-            this.elements[i].value =  that.pattern;
+            if (this.elements[i].value.length > 0) {
+                that.applyPatternToValue(this.elements[i]);
+            } else {
+                this.elements[i].value =  that.pattern;
+            }
             this.elements[i].onkeydown = inputKeyEventDown;
             this.elements[i].onkeypress = inputKeyEventPress;
             this.elements[i].onfocus = inputFocusEvent;
         }
     } else if (this.elements != null) {
-        this.elements.value =  that.pattern;
+        if (this.elements.value.length > 0) {
+            that.applyPatternToValue(this.elements);
+        } else {
+            this.elements.value =  that.pattern;
+        }
         this.elements.onkeydown = inputKeyEventDown;
         this.elements.onkeypress = inputKeyEventPress;
         this.elements.onfocus = inputFocusEvent;
     }
+}
+
+PhoneMask.prototype.applyPatternToValue = function(elem) {
+    var valueArr = elem.value.split("");
+    var patternValue = this.pattern;
+    var len = valueArr.length;
+    for (var i = 0; i < len; i++) {
+        patternValue = patternValue.replace(this.patternChar, valueArr[i]);
+    }
+    elem.value = patternValue;
 }
 
 PhoneMask.prototype.selectFirstPatterntChar = function(elem) {
